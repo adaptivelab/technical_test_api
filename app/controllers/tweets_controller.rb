@@ -9,7 +9,11 @@ class TweetsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @tweets }
+      if this_one_should_fail_randomly?
+        format.json { render json: { error: a_random_error_message } }
+      else
+        format.json { render json: @tweets }
+      end
     end
   end
 
@@ -82,5 +86,16 @@ class TweetsController < ApplicationController
       format.html { redirect_to tweets_url }
       format.json { head :no_content }
     end
+  end
+  
+  private
+  # Fail one in 5 times.
+  def this_one_should_fail_randomly?
+    (rand * 5).round == 0
+  end
+  
+  def a_random_error_message
+    messages = ["Something went wrong", "I don't know what happened there", "Don't blame me", "Server error", "ERROR #325757", "Server is down", "Server no respondy"]
+    messages[(rand * messages.length - 1).round]
   end
 end
