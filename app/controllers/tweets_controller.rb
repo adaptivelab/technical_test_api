@@ -8,12 +8,11 @@ class TweetsController < ApplicationController
     respond_to do |format|
       format.html { @tweets = Tweet.all }
       if this_one_should_fail_randomly?
-        format.json { render json: { error: a_random_error_message } }
+        format.json { render json: json_error_message  }
+        format.xml  { render xml:  xml_error_message   }
       else
-        format.json do
-          @tweets = Tweet.random_sample
-          render json: @tweets
-        end
+        format.json { render json: Tweet.random_sample }
+        format.xml  { render xml:  Tweet.random_sample }
       end
     end
   end
@@ -26,6 +25,7 @@ class TweetsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @tweet }
+      format.xml  { render xml:  @tweet }
     end
   end
 
@@ -98,5 +98,13 @@ class TweetsController < ApplicationController
   def a_random_error_message
     messages = ["Something went wrong", "I don't know what happened there", "Don't blame me", "Server error", "ERROR #325757", "Server is down", "Server no respondy"]
     messages[(rand * messages.length - 1).round]
+  end
+  
+  def json_error_message
+    { error: { message: a_random_error_message } }
+  end
+  
+  def xml_error_message
+    { message: a_random_error_message }.to_xml(root: "error")
   end
 end
