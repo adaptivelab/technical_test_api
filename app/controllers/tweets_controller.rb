@@ -5,14 +5,15 @@ class TweetsController < ApplicationController
   # GET /tweets
   # GET /tweets.json
   def index
-    @tweets = Tweet.all
-
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { @tweets = Tweet.all }
       if this_one_should_fail_randomly?
         format.json { render json: { error: a_random_error_message } }
       else
-        format.json { render json: @tweets }
+        format.json do
+          @tweets = Tweet.random_sample
+          render json: @tweets
+        end
       end
     end
   end
