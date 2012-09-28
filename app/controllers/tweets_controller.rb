@@ -6,10 +6,12 @@ class TweetsController < ApplicationController
   # GET /tweets.json
   def index
     respond_to do |format|
-      format.html { @tweets = Tweet.all }
+      # Shows all the tweets in the HTML version.
+      format.html   { @tweets = Tweet.all }
+      
       if this_one_should_fail_randomly?
-        format.json { render json: json_error_message  }
-        format.xml  { render xml:  xml_error_message   }
+        format.json { render json: json_error_message, :status => :error  }
+        format.xml  { render xml:  xml_error_message,  :status => :error  }
       else
         format.json { render json: Tweet.random_sample }
         format.xml  { render xml:  Tweet.random_sample }
