@@ -1,7 +1,13 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   
+  after_filter :set_cors_access_header
+  
   private
+  def set_cors_access_header
+    headers['Access-Control-Allow-Origin'] = '*'
+  end
+  
   # Used as a controller filter.
   def must_be_admin
     authenticate_user!
